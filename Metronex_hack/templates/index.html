@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metronex_Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #1e1e1e;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-top: 20px;
+            transition: margin-left 0.3s ease; 
+        }
+
+        /* سايد بار */
+        .sidebar {
+            margin-top: -10px;
+            width: 16%;
+            background-color: #333;
+            color: white;
+            padding: 20px 5px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            position: fixed;
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            transition: transform 0.3s ease-in-out; 
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-100%); 
+        }
+
+        .sidebar h5 {
+            text-align: center;
+            border-bottom: 1px solid rgb(255, 255, 255);
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            border: solid 1px gray;
+            margin: 5px;
+        }
+
+        .sidebar ul li {
+            margin: 4px 0;
+            cursor: pointer;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #444;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            width: 100%;
+            margin-left: 16%; 
+            transition: margin-left 0.3s ease;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            background: #333;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            color: white;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .logo img {
+            width: 100px;
+            margin-bottom: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        .input-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-area select,
+        .input-area input,
+        .input-area button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+        }
+
+        .input-area select {
+            width: 100%; 
+            max-width: 25%;
+            background-color: #2e2e2e;
+            color: white;
+            border: 2px solid #555;
+        }
+
+        .input-area input {
+            width: 100%;
+            max-width: 40%;
+            background-color: #2e2e2e;
+            color: #00ff00;
+            border: 2px solid #555;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+        }
+
+        .input-area button {
+            width: 100%;
+            max-width: 20%;
+            background-color: #00ff00;
+            color: #1e1e1e;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .button {
+            background-color: black;
+            color: red;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+        }
+
+        span {
+            color: red;
+            text-align: center;
+        }
+
+        .terminal {
+            background-color: #000;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.1em;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: -webkit-fill-available;
+            transition: background 0.3s, color 0.3s;
+            margin: 0px 10px;
+            margin-top: 30px;
+            margin-bottom: -5%;
+            box-shadow: 0px 0px 5px 2px rgb(154, 154, 154);
+            overflow: auto;
+            max-height: 300px;
+        }
+
+        .terminal label {
+            width: 100%;
+            text-align: left;
+            white-space: break-spaces;
+            max-height: inherit;
+            padding: 5px;
+        }
+
+        .l1 {
+            display: block;
+            color: rgb(253, 0, 0);
+        }
+
+        .span {
+            color: red;
+        }
+
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1100; 
+        }
+
+        .toggle-btn:hover {
+            background-color: #444;
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column; 
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static; 
+                height: auto;
+                box-shadow: none; 
+            }
+
+            .sidebar h5 {
+                text-align: center;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .input-area select,
+            .input-area input,
+            .input-area button {
+                width: 100%; 
+                max-width: none;
+                margin: 5px 0;
+            }
+
+            .logo img {
+                width: 80px;
+            }
+
+            .terminal {
+                max-height: 250px;
+                margin-top: 20px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo img {
+                width: 70px;
+            }
+
+            .input-area select,
+            .input-area input,
+            .input-area button {
+                padding: 8px; 
+            }
+
+            .terminal {
+                font-size: 1em; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+    <div class="sidebar">
+        <h5>Target Info</h5>
+        <ul>
+            {% for visitor in visitors %}
+            <li><span id="span">PC:</span> {{ visitor[1]}} <br> <span id="span">Owner:</span> {{ visitor[2] }} <br><span id="span">Time:</span> {{visitor[3] }} <br> <span id="span">Command:</span>{{visitor[4] }} </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% for visitor in visitors %}
+    <label id="{{visitor[2]}}" hidden>{{visitor[4]}}</label>
+    {% endfor %}
+    <div class="main-content">
+        <div class="container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Metronex">
+            </div>
+
+            <form method="POST">
+                <div class="input-area">
+                    <select style="color:lightgreen;" name="id_pc"  required>
+                        {% for visitor in visitors %}
+                        <option>{{visitor[1]}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" placeholder="أدخل الأمر هنا..." id="userInput" name="command" required>
+                    <button type="submit" onclick="start()">تنفيذ</button>
+                </div>
+            </form>
+
+            <button class="button" onclick="reset()">تحديث</button>
+            <label id="l1" style="display:none;">يرجى الإنتظار ل 10 ثواني ليتم تنفيذ الأمر</label>
+        </div>
+
+        <div class="terminal">
+            <label id="output" class=_1 style="display:block;">
+                <span>Metronex Terminal : </span>
+                {% for visitor in visitors %}
+                **** {{visitor[1]}}  ****<br> {{visitor[5]}}
+                {% endfor %}
+            </label>
+        </div>
+    </div>
+
+    <script>
+        function start() {
+            let input = document.getElementById("userInput").value;
+            document.getElementById("output").textContent = `Metronex: ${input}`;
+            document.getElementById("l1").style.display = "block";
+
+            setTimeout(function () {
+                document.getElementById("l1").style.display = "none";
+            }, 10000);
+        }
+
+        function reset() {
+            location.reload();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('hidden');
+            mainContent.style.marginLeft = sidebar.classList.contains('hidden') ? '0' : '16%';
+        }
+    </script>
+</body>
+</html>
